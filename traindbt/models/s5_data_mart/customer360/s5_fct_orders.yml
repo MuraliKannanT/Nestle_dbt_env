@@ -1,0 +1,23 @@
+models:
+  - name: s5_fct_orders
+    description: Fact table for Orders combined with all order items
+    columns:
+      - name: product_id
+        description: The unique key of the orders mart.
+        data_tests:
+          - relationships:
+              to: ref('s5_products')
+              field: product_id
+      - name: customer_id
+        description: The unique key of the orders mart
+        data_tests:
+          - relationships:
+              to: ref('s5_customers')
+              field: customer_id
+      - name: location_id
+        description: The unique key of the orders mart.
+        data_tests:
+          - relationships:
+              to: ref('s5_locations')
+              field: location_id
+  

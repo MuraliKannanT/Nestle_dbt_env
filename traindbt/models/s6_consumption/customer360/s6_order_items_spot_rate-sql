@@ -1,0 +1,5 @@
+{{     config(alias=this.name + var('var_pno') ) }}
+
+
+select * from 
+{{ ref('s4_order_items_spot_rate')}}

@@ -1,0 +1,42 @@
+{{ config(alias=this.name + var('var_pno'))  }}
+with 
+    orders as 
+    (   
+        select 
+            order_id,
+            location_id,
+            customer_id,
+            order_total,
+            tax_paid,
+            date(ordered_at) as ordered_at
+        from
+            {{ ref('s3_orders') }}), 
+
+    global_currencies as
+    (
+        select 
+            *
+        from
+            {{ ref('s4_global_sap_currencies') }}
+
+    )
+
+select 
+    ord.order_id,
+    ord.location_id,
+    ord.customer_id,
+    ord.order_total,
+    ord.tax_paid,
+    date(ord.ordered_at) as ordered_at, 
+    curr.fcurr_chf,
+    curr.fcurr_eur,
+    curr.effective_date,
+    curr.from_currency,
+    date(curr.effective_date) as spot_rate_date,
+    'SPOT_RATE' as exchange_rate_type
+from
+    orders  as ord
+left outer join 
+    global_currencies as curr
+on 
+    ord.ordered_at = curr.effective_date

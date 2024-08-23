@@ -1,0 +1,11 @@
+{{ 
+    config(materialized='table',
+          alias='s1_big_tcurr_098',
+          transient=false
+          )
+}}
+
+select 
+    * 
+from 
+    {{ source('glb_fc_tcurr', 'bigsftcurr_extended_v')}}
