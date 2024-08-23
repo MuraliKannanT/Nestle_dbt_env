@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: glb_fc_tcurr
+    description: SAP Exchange Rate Information - SAP BW BIG
+    database: edw_dev
+    schema: PRS
+    tables:
+      - name: bigsftcurr_extended_v
+        loaded_at_field: gdatu::timestamp
+        columns:
+        - name: KURST
+          description: Exchange Rate Type
+        - name: FCURR
+          description: From Currency
+        - name: INTERIMCURR
+          description: Interim Currency
+        - name: GDATU
+          description: Generated Date
+        - name: EUR
+          description: Euro
+        - name: AUD
+          description: Australian Dollar
+        - name: CHF
+          description: Swiss Franc
+        - name: USD
+          description: US Dollar
+        - name: CREATED
+          description: Created On Date
+        - name: MODIFIED
+          description: Last Modified Date
+        # freshness:
+        #   warn_after:
+        #     count: 6
+        #     period: hour 
+        #   error_after:
+        #     count: 1
+        #     period: day

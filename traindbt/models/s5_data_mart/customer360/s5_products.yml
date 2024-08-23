@@ -1,0 +1,8 @@
+models:
+  - name: s5_products
+    description: Products Dimensions. One row per product.
+    columns:
+      - name: product_id
+        description: The unique key of the orders mart.
+        data_tests:
+          - dbt_constraints.primary_key

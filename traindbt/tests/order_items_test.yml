@@ -1,0 +1,32 @@
+unit_tests:
+
+  - name: test_order_items_count_drink_items_with_zero_drinks
+    description: >
+      Scenario: Order without any drinks
+        When the `order_items_summary` table is built
+        Given an order with nothing but 1 food item
+        Then the count of drink items is 0
+
+    # Model
+    model: order_items_summary
+
+    # Inputs
+    given:
+      - input: ref('order_items')
+        rows:
+          - {
+              order_id: 76,
+              order_item_id: 3,
+              is_drink_item: false
+            }
+      - input: ref('stg_orders')
+        rows:
+          - { order_id: 76 }
+
+    # Output
+    expect:
+      rows:
+        - {
+            order_id: 76,
+            count_drink_items: 0
+          }

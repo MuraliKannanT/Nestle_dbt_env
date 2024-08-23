@@ -1,0 +1,16 @@
+{{ onfig(materialized='view',
+          alias=this.name + var('var_pno') ) }}
+
+select 
+    KURST  as exchange_rate_type,
+	FCURR as from_currency,
+	INTERIMCURR as intermediate_currency,
+	GDATU as effective_date,
+	EUR  as fcurr_eur,
+	CHF  as fcurr_chf,
+	CREATED as create_date,
+	MODIFIED as last_modified
+from
+    {{ ref('s1_big_tcurr')}}
+where 
+    FCURR ='USD'

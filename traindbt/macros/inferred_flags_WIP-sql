@@ -1,0 +1,84 @@
+{% macro inferred_members_test(dbname, scname, dmname, ftname) -%}
+
+{% set fulname = dbname + '.' + scname + '.' + dmname %}
+
+{% set info_query %}
+        select count(col.column_name) totcols
+        from information_schema.columns col
+        where col.table_name =  upper('{{dmname}}')  and col.table_schema = upper('{{scname}}')
+        and col.table_catalog = upper('{{dbname}}')
+{% endset %}
+
+{% set resultnum = run_query(info_query) %}
+
+{% if execute %}
+    {% set numbr = resultnum.columns[0].values()[0] %}
+{% endif %}
+
+{% set rep_query %}
+    select repeat('''0'''||',',{{numbr}}-1) as repcol
+{% endset %}
+
+{% set represult = run_query(rep_query) %}
+    {% set colval = represult.columns[0].values()[0] %}
+
+-- Problem in setting the result set from represult
+
+{% if execute %}
+    {% set colval = represult.columns[0].values()[0] %}
+{% endif %}
+
+{% set colvals = colval + '''0''' %}
+
+{{ colvals }}
+{#
+{% for i in numbr %}
+  {% if loop.first %}
+    {% set colvals =  ''' + {{ i }} + ''' + ',' %}
+  {% endif %}
+  {% if not loop.last and not loop.first %}
+    {% set colvals =  {{ colvals }} + ''' + {{ i }} + ''' + ',' %}
+  {% endif %}
+  {% if loop.last %}
+    {% set colvals = {{ colvals }} + ''' + {{ i }} + ''' %}
+  {% endif %}
+    {{ colvals }}
+{% endfor %}
+
+#}
+{# Show the primary keys from the dimensional table #}
+
+{% set primary_query %}
+show primary keys in table {{ dimname }}
+{% endset %}
+
+{# Get the Query ID of the Show query #}
+
+{% set prim = run_query(primary_query) %}
+{% set lquery %}
+select last_query_id() 
+{% endset %}
+
+{% set lqid = run_query(lquery) %}
+
+{% if execute %}
+{% set qid = lqid.columns[0].values()[0] %}
+
+{# Get the Primary Key Column Name #}
+
+{% set info_query %}
+    select "column_name" from table(result_scan('{{qid}}'))
+{% endset %}
+
+{% set surcolname = run_query(info_query) %}
+
+
+
+{#
+{% set insert_query %}
+       insert into {{ fulname }} values ( {{ colvals }})     
+{% endset %}
+
+{% do run_query(insert_query) %}
+#}
+{%- endmacro %}
