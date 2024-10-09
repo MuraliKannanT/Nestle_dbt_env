@@ -11,6 +11,7 @@ models:
         description: The total amount for each order
         data_tests:
           - check_value:
-
+              pk_name: order_id
+              threshold: 4.2
 
 
